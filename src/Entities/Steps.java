@@ -10,16 +10,24 @@ package Entities;
  * @author Faruk-pc
  */
 public class Steps {
-    
+
     private Long id;
-    
+
     private String stepName;
-    
+
     private Boolean stepResult;
-    
+
     private String stepDuration;
-    
+
     private String stepDescription;
+
+    private Steps(StepsBuilder builder) {
+        this.stepName = builder.stepName;
+        this.stepDescription = builder.stepDescription;
+        this.stepDuration = builder.stepDuration;
+        this.stepResult = builder.stepResult;
+        this.id = builder.id;
+    }
 
     public Long getId() {
         return id;
@@ -60,5 +68,52 @@ public class Steps {
     public void setStepDescription(String stepDescription) {
         this.stepDescription = stepDescription;
     }
-    
+
+    public static class StepsBuilder {
+
+        private Long id;
+
+        private String stepName;
+
+        private Boolean stepResult;
+
+        private String stepDuration;
+
+        private String stepDescription;
+
+        public StepsBuilder setStepId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public StepsBuilder setStepName(String stepName) {
+            this.stepName = stepName;
+            return this;
+        }
+        
+        public StepsBuilder setStepDuration(String stepDuration){
+            this.stepDuration = stepDuration;
+            return this;
+        }
+        
+        public StepsBuilder setStepDescription(String stepDescription){
+            this.stepDescription = stepDescription;
+            return this;
+        }
+
+        public StepsBuilder setStepResult(String result) {
+            if (result.equalsIgnoreCase("Done")) {
+                this.stepResult = Boolean.TRUE;
+            } else {
+                this.stepResult = Boolean.FALSE;
+            }
+            return this;
+        }
+        
+        public Steps Build(){
+            return new Steps(this);
+        }
+
+    }
+
 }

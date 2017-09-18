@@ -5,6 +5,7 @@
  */
 package Entities;
 
+import XmlModal.ReportNode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +30,10 @@ public class Scenario {
     public Scenario(ScenarioBuilder builder) {
         this.modules = builder.modules;
         this.scenarioDescription = builder.scenarioDescription;
-        this.scenarioDuration = builder.scenarioDescription;
+        this.scenarioDuration = builder.scenarioDuration;
         this.scenarioName = builder.scenarioName;
         this.scenarioResult = builder.scenarioResult;
+        this.modules = builder.modules;
         this.id = builder.id;
     }
 
@@ -83,7 +85,7 @@ public class Scenario {
         this.modules = modules;
     }
 
-    public class ScenarioBuilder {
+    public static class ScenarioBuilder {
 
         private Long id;
 
@@ -97,15 +99,26 @@ public class Scenario {
 
         private List<Modules> modules = new ArrayList<>();
 
-        private String moduleName;
+        public ScenarioBuilder() {
+        }
 
-        private Boolean moduleResult;
+        public ScenarioBuilder setScenarioModules(List<ReportNode> reportNodes) {
 
-        private String moduleDuration;
+            List<Modules> modules = new ArrayList<>();
 
-        private String moduleDescription;
+            for (ReportNode reportNode : reportNodes) {
+                modules.add(new Modules.ModulesBuilder()
+                        .setModuleDescription(reportNode.getData().getDescription())
+                        .setModuleDuration(reportNode.getData().getDuration())
+                        .setModuleName(reportNode.getData().getName())
+                        .setModuleResult(reportNode.getData().getResult())
+                        .setModuleSteps(reportNode.getReportNode())
+                        .build());
+            }
 
-        private List<Steps> steps = new ArrayList<>();
+            this.modules = modules;
+            return this;
+        }
 
         public ScenarioBuilder setScenarioId(Long id) {
             this.id = id;
@@ -117,8 +130,13 @@ public class Scenario {
             return this;
         }
 
-        public ScenarioBuilder setScenarioResult(Boolean scenarioResult) {
-            this.scenarioResult = scenarioResult;
+        public ScenarioBuilder setScenarioResult(String result) {
+
+            if (result.equalsIgnoreCase("Done")) {
+                this.scenarioResult = Boolean.TRUE;
+            } else {
+                this.scenarioResult = Boolean.FALSE;
+            }
             return this;
         }
 

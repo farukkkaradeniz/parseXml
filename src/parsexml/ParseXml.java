@@ -5,9 +5,10 @@
  */
 package parsexml;
 
+import Entities.Scenario;
+import XmlModal.ReportNode;
 import XmlModal.Results;
 import java.io.File;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
@@ -30,8 +31,8 @@ public class ParseXml {
             
             Unmarshaller jaxbUnmarshaller = jAXBContext.createUnmarshaller();
             
-            Results results = (Results)jaxbUnmarshaller.unmarshal(xmlFile);
-            
+            Results results = (Results) jaxbUnmarshaller.unmarshal(xmlFile);
+            MeaningResults(results);
             System.out.println(results.getGeneralInfo().getResultName());
             
         } catch (Exception e) {
@@ -40,9 +41,18 @@ public class ParseXml {
         
     }
     
-    public static void MeaningResults(Results result){
-    
+    public static void MeaningResults(Results result) {
+        ReportNode reportnodes = result.getReportNodes().get(0).getReportNode().get(0).getReportNode().get(0);
+        Scenario scenario;
+        scenario = new Scenario.ScenarioBuilder()
+                .setScenarioDescription(reportnodes.getData().getDescription())
+                .setScenarioDuration(reportnodes.getData().getDuration())
+                .setScenarioName(reportnodes.getData().getName())
+                .setScenarioResult(reportnodes.getData().getResult())
+                .setScenarioModules(reportnodes.getReportNode())
+                .build();
         
+        System.out.println(scenario.getScenarioName());
         
     }
     
